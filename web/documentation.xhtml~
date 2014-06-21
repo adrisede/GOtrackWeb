@@ -1,0 +1,193 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+
+      >
+    <h:head>
+        <title>UBC-CHiBi|GOtrack</title>
+        <h:outputStylesheet library="css" name="gotrack.css"  />
+        <h:outputStylesheet library="css" name="styles3.css"  />  
+        <link rel="stylesheet" href="css/styles3.css" type="text/css" />
+        <script src='https://rawgithub.com/Polychart/polychart2/develop/polychart2.standalone.js' type='text/javascript'></script>
+
+        <style>
+            .rChart {
+                display: block;
+                margin-left: auto; 
+                margin-right: auto;
+                width: 1000px;
+                height: 140px;
+            }  
+        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <!-- Prevents caching at the Proxy Server -->
+
+        <meta http-equiv="Expires" content="0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="description" content="GOtrack is an integral tool that reflects the problems and trends in the stability and annotation biases of multiple model organisms." />
+
+        <meta name="keywords" content="genomics,bioinformatics,genetics,gene,function,ontology,biotechnology,medicine,biomedical,meta-analysis,statistics,search,open source,database,software" />
+        <meta name="author" content="GOtrack admin (asedeno@chibi.ubc.ca)" />
+    </h:head>
+
+    <h:body>
+        <div id="site-wrapper">
+            <div id ="header">
+                <div id="top">
+                    <div class="left" id="logo">
+                        <h:graphicImage library="images"  width="130" height="110" name="logo1.png"/>
+                    </div>
+                    <div class="left navigation" id="main-nav">
+                        <ul class="tabbed">
+                            <li><a href="index.xhtml">Home</a></li>
+                            <li><a href="trends.xhtml">Global trends</a></li>
+                            <li><a href="about.xhtml">Tutorial</a></li>
+                            <li class="current-tab"><a href="documentation.xhtml">Documentation</a></li>
+                            <li><a href="resources.xhtml">Resources</a></li>
+                        </ul>
+                        <div class="clearer">&nbsp;</div>
+                    </div>
+                    <div class="clearer">&nbsp;</div>
+                </div>
+            </div>
+
+            <!-- MAIN -->
+            <div class="left" id="main-content">
+                <div class="section">
+                    <div class="section-title">Documentation</div>
+                    <div class="section-content">
+                        <div class="post">
+                            <div class="post-body">
+
+                                <strong> Overview </strong>
+
+                                <p>
+                                    The Gene Ontology (GO) is a widely popular set of terms used to annotate gene product characteristics (“functions”) 
+                                    based on certain evidence. Despite ongoing changes in its design, it is considered a “gold standard” tool for analysis and 
+                                    data interpretation in a variety of settings.</p> 
+                                <p>
+                                    Previous studies have highlighted species-specific biases in annotation properties that could potentially impact the 
+                                    interpretation and reproducibility of analyses where GO was used, particularly for genet set enrichment analysis or
+                                    gene function prediction. </p>
+                                <p>
+                                    Assessment of this impact, however, remains challenging as these changes differ between species and gene products.
+                                    We extend upon the results by Gillis J and Pavlidis P. [Bioinformatics 29,4 (2013)], to analyse the historical 
+                                    stability of GO annotation data in 14 different organisms, which include semantic similarity and 
+                                    multifunctionality metrics, GO term membership, trends and a visualization tool (GOtrack) to visualize 
+                                    those changes on a per gene and per GO term basis. This information will help the research community to 
+                                    visualize how the annotation for particular genes of their interest have changed and assess its impact on their research.
+                                </p>
+
+                                <strong> Why does the GO annotations change?</strong>
+                                <p> There are several reasons why the annotations change and can impact studies where GO was used.
+                                    Rachael P Huntley (from EBI) has recently published a review paper describing some of these changes,
+                                    which can be summarized as follows:
+                                </p><p>
+                                    <li>Reestructuring the GO </li>
+                                    <li>Reviewing inconsistencies or incorrect information</li>    
+                                    <li>Updating definitions, adding or removing parents/children terms</li>
+                                    <li>Updates in the annotations of gene products (promoting the term to a children term(more granular one)</li>
+                                    <li>Terms becoming obsolete</li>
+                                    <li>Terms that are not adequate for usage in direct annotations</li>
+                                    <li>References and evidence codes that change in the annotations</li>
+                                    <li>Problems with data sets supplied by annotation groups</li>
+                                    <li>After annotation groups update identifiers being mapped between theirs and the UniprotKB</li>
+                                    <li>Quality control procedures</li>
+                                    <li>GOterms that are constrained to a certain taxa, deriving in post processing of annotations</li>
+                                    <li>Annotation that are incorporated into the "blacklist" (negative associations)</li>
+                                    <p></p>
+                                    Reference: Huntley et al. (2014) Understanding how and why the Gene Ontology and its annotations evolve: the GO within
+                                    Uniprot. GigaScience. 3:4. 
+                                </p>             
+                                <strong>What model organisms can I visualize?</strong>
+                                <p>
+                                    We have collected and integrated data for:</p>
+                                <p>
+                                    <li>Arabidopsis</li>
+                                    <li>Chicken</li>    
+                                    <li>Cow</li>
+                                    <li>Dictyostelium</li>
+                                    <li>Dog</li>
+                                    <li>Escherichia coli</li>
+                                    <li>Fruitfly</li>
+                                    <li>Human</li>
+                                    <li>Mouse</li>
+                                    <li>Rat</li>
+                                    <li>Pig</li>
+                                    <li>Zebrafish</li>
+                                    <li>Worm</li>
+                                    <li>Yeast</li>
+                                </p>
+                                <p>
+                                    We are considering to include some others in the future. </p>
+
+                                <strong>Where are these annotations coming from? </strong>
+                                <p>The files used for this tool come from EMBL-EBI, FlyBase, SGD, and EcoCyc, which base their annotations on 
+                                    the structure of the Gene Ontology. </p>
+
+                                <strong> How were the IDs mapped? </strong>
+                                <p>
+                                    To be able to trace the gene product annotations over time (from the very first edition available), the identifiers were mapped using 3 combined methods:
+                                    <p> </p>
+                                    1)using the mapping files provided by the <a href="ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/by_organism/"> Uniprot website</a>, 
+                                    <p></p>
+                                    2)using the synonyms listed on the GOA files to find and match the missing ID with the one used in subsequent editions and <p></p>
+                                    3)updating the Uniprot IDs by querying each identifiers to the Uniprot website and retrieve the latest ID version
+                                     (as some of them over time are merged, updated from TrEMBL to SwissProt ID or become deprecated)                                    
+                                </p>
+                                <p>In addition, some old annotations were supported by publications which had Medline identifiers, those were also 
+                                    upgraded to the respective Pubmed Identifier using these <a href="http://mbr.nlm.nih.gov/Download/MUIDtoPMID/index.shtml"> conversion files</a> to trace each publication supporting the annotations. 
+                                </p>
+                                <strong>Am I looking at genes, gene products or proteins? </strong>
+
+                                <p>The identifiers refer to gene products, which are all mapped to one gene(as informed in the Uniprot website),including alternative 
+                                    splicing variants,proteins and RNAs. This is the reason why even if the human genome has almost 23,000 genes,
+                                    we can find > 50,000 identifiers. Take into account that some of them are redundant and some are automatically assigned as fragments but then removed as curation efforts progress. 
+
+                                </p>
+
+                                <strong>What is the semantic similarity and how is it calculated? </strong>
+
+                                <p> Is a metric used to estimate how similar are two concepts based on a distance measurement.
+                                    In this case, it is used to estimate the similiarity between annotations for the same gene product 
+                                    comparing each edition versus de latest one(current). Distance was measured with the Jaccard index. 
+                                    It was calculated based on the set of GO terms that
+                                    are always present across all the editions and a list of the gene products that are at least 90% present
+                                    across all editions. 
+                                </p>
+                                <strong>GOtrack pipeline</strong>
+                                <p></p>
+                                <p>    <h:graphicImage library="images"  name="datamodel.jpg" style="vertical-align: middle;"/></p>
+                                <p>An outline of the structure of GOtrack is given above. All the dependencies and third-party packages are open source
+                                    and compatible with the GO track open source license. GOtrack is primarily implemented in Java. 
+                                    Among the application technologies GOtrack relies on are: <a href="http://primefaces.org/">Primefaces</a>,
+                                    and <a href="https://developers.google.com/chart/">Google Charts</a>. The database backend of GOtrack is MySQL (version 5+). 
+                                    The development was conducted in Eclipse integrated development environment with the project management assistance of Maven, and Netbeans. 
+                                    The web browser tool has been tested in Firefox and Chrome (Ubuntu). </p>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-separator"></div>
+                </div>
+
+                <div class="clearer">&nbsp;</div>
+            </div>
+        </div>
+
+        <!-- This is the end of the two main columns -->
+
+        <div id="footer">
+            <div class="center" id="footer-left">
+                <p>&copy; UBC, Centre of High-throughput Biology, 2014
+                    <a href="terms.xhtml">Terms and Conditions</a>
+                </p>
+            </div>
+        </div>
+    </h:body>
+</html>

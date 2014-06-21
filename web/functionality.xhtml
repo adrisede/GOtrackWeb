@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      >
+
+    <h:head >
+        <title>UBC-CHiBi|GOtrack</title>        
+        <h:outputStylesheet library="css" name="gotrack.css"  />
+        <h:outputStylesheet library="css" name="styles3.css"  />    
+        <script src='https://rawgithub.com/Polychart/polychart2/develop/polychart2.standalone.js' type='text/javascript'></script>
+
+
+        <style>
+            .rChart {
+                display: block;
+                margin-left: auto; 
+                margin-right: auto;
+                width: 1000px;
+                height: 140px;
+            }  
+        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <!-- Prevents caching at the Proxy Server -->
+
+        <meta http-equiv="Expires" content="0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="description" content="GOtrack is an integral tool that reflects the problems and trends in the stability and annotation biases of multiple model organisms." />
+
+        <meta name="keywords" content="genomics,bioinformatics,genetics,gene,function,ontology,biotechnology,medicine,biomedical,meta-analysis,statistics,search,open source,database,software" />
+        <meta name="author" content="GOtrack admin (asedeno@chibi.ubc.ca)" />
+
+        <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization',
+        'version':'1','packages':['timeline']}]}"></script>   
+        <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization',
+        'version':'1','packages':['motionchart']}]}"></script> 
+
+        <!--Load the AJAX API-->
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <h:outputScript library="js" name="gotrack.js" />
+        <script type="text/javascript">
+                                    function start() {
+                                    statusDialog.show();
+                                    }
+
+                            function stop() {
+                            statusDialog.hide();
+                            }
+        </script>
+
+    </h:head>
+
+    <h:body onload="callgoogle2(); callgoogle3();" >
+        <div id="site-wrapper">
+            <div id ="header">
+                <div id="top">
+                    <div class="left" id="logo">
+                        <h:graphicImage library="images"  width="130" height="110" name="logo1.png"/>
+                    </div>
+                    <div class="left navigation" id="main-nav">
+                        <ul class="tabbed">
+                            <li class="current-tab">
+                                <a href="index.xhtml">Home</a></li>
+                            <li><h:link value="Browse Global trends" outcome="trends.xhtml" /></li>
+                            <li> <h:link value="Tutorial" outcome="about.xhtml" /></li>
+                            <li> <h:link value="Documentation" outcome="documentation.xhtml" /></li>                                          
+
+                            <li><h:link value="Resources" outcome="resources.xhtml" /></li>          
+                        </ul>
+                        <div class="clearer">&nbsp;</div>
+                    </div>
+                    <div class="clearer">&nbsp;</div>
+                </div>
+            </div>
+
+
+
+            <!-- This is the delimiter for the menu nav bar, not implementing the sub-nav -->
+
+            <!-- Beginning of the two main columns -->
+
+            <div class="main" id="main-two-columns">
+                <div class="right" id="sidebar">
+
+                    <!-- VOLATILES -->
+                    <div class="section">
+
+                        <div class="section-title">Top popular genes (based on user queries)</div>
+
+                        <div class="nice-list">
+
+                            <p:dataList value="#{userRequestBean.popularGenes}" var="gene" type="ordered">  
+                                #{gene}  
+                            </p:dataList>  
+
+                        </div>
+
+                    </div>
+
+                    <!-- MULTIFUNCTIONAL -->
+                    <div class="section">
+
+                        <div class="section-title">Top multifunctional genes (in the latest edition)</div>
+
+                        <div class="nice-list">
+
+                            <h:form>                 
+                                <p:dataGrid value="#{userRequestBean.topMultifunc}" var="gene" columns="1">
+                                    #{gene}
+                                </p:dataGrid>
+                            </h:form>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- MAIN -->
+                <div class="left" id="main-content">
+                    <div class="section">
+                        <div class="section-title">Your results for #{userRequestBean.userInput}</div>
+                        <h:form id="nsearch">
+                            <p:commandButton value="New Gene Search" action="index?faces-redirect=true" />  
+                            <p:commandButton value="Back to results" action="userRequest?faces-redirect=true" />  
+                        </h:form>
+                        <div class="post">
+                            <div class="post-body">
+
+                                <!-- PUT THE ACTUAL CONTENT -->
+                                <hgroup>
+                                    <!-- <p>Don't forget to read the documentation!</p> -->
+                                    <h:form id="initial" >  
+                                        <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="true" resizable="false"> 
+                                            <p:outputLabel value="Downloading" />
+                                        </p:dialog>
+                                        <p:tabView id="tabView" dynamic="true" effect="fade" effectDuration="normal" widgetVar="maintab" >                                            
+                                            <p:tab id="tab2" title="Functionality" >
+
+                                                <h:inputHidden id="data3" value="#{userRequestBean.graph2Data}" />                                                
+                                                <h:inputHidden id="data4" value="#{userRequestBean.graph3Data}" />                        
+
+                                                <p:tabView id="tabViewFunc" widgetVar="funcview">                          
+                                                    <p:tab id="tab2func" title="Evidence code history">
+                                                        <p></p>
+                                                        <center> <h5> Annotation timeline and changes based on the evidence used </h5></center>
+
+
+                                                        <p:commandButton style="font-size: 7px;" icon="ui-icon-info"  id="tooltipd" />
+
+                                                        <p:tooltip id="evcodesused" for="tooltipd">
+                                                            <h:panelGroup>
+                                                                <h:outputText value="Graph shows annotations matching your query for the selected gene"/> <br />
+                                                                <h:outputText value="product Id(s) and GOterm(s). Each row is a combination of "/> <br />
+                                                                <h:outputText value="UniprotID+GOterm+PUBMED (if there was any associated). Each block"/> <br />
+                                                                <h:outputText value="represents monthly editions, coloured by the evidence code supporting"/> <br />
+                                                                <h:outputText value="the association at each time point. Empty spaces mean that the association"/> <br />
+                                                                <h:outputText value="was absent at that time-point."/>
+                                                            </h:panelGroup>
+                                                        </p:tooltip>
+
+                                                        
+                                                        <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                                                        <div id="evidenceCodes" alight="justify" style="width: 716px;height: 250px;"> </div>
+                                                        <p:commandButton value="Download" ajax="false"  onclick="PrimeFaces.monitorDownload(start, stop);"
+                                                                         icon="ui-icon-arrowthick-1-s" action="#{userRequestBean.deletefig1file}"
+                                                                         oncomplete="statusDialog.hide();">
+                                                          <p:fileDownload value="#{userRequestBean.fileEvidenceCodeHist}" />
+                                                        </p:commandButton>
+
+                                                        <p:commandButton style="font-size: 7px;" icon="ui-icon-info"  id="tooltipe" />
+
+                                                        <p:tooltip id="evcodestable" for="tooltipe">
+                                                            <h:panelGroup>
+                                                                <h:outputText value="In case there were publications supporting the annotations,"/> <br />
+                                                                <h:outputText value="the table provides links to access the original papel used"/> <br />
+                                                                <h:outputText value="as a reference to support the annotation."/>
+                                                            </h:panelGroup>
+                                                        </p:tooltip>
+
+                                                        <p:dataTable id="pubmedtab" var="pub" value="#{userRequestBean.pubmedtable}" resizableColumns="true" liveResize="true" >  
+                                                            <p:column headerText="Gene product Id">                              
+                                                                <h:outputText value="#{pub.geneid}" />
+                                                            </p:column> 
+
+                                                            <p:column headerText="GOname">  
+                                                                <h:outputText value="#{pub.goname}" />  
+                                                            </p:column>  
+
+                                                            <p:column headerText="PUBMED link" >                              
+                                                                <a href="http://www.ncbi.nlm.nih.gov/pubmed/?term=#{pub.id}" target="_blank" title="Go to Pubmed web page" >#{pub.id}</a>
+                                                            </p:column>                            
+                                                        </p:dataTable>                                                        
+
+                                                        <p:tooltip id="tooltiPubmedTab" for="pubmedtab" value="Publications used to support those annotations"
+                                                                   showEffect="fade" />
+                                                        <p>
+                                                            <center><h:graphicImage library="images"  name="ecodes.jpg" />
+                                                            </center></p>
+                                                        <p></p>                             
+                                                    </p:tab>
+
+                                                    <p:tab id="tab1func" title="GoTerm Membership">
+                                                        <p></p>
+                                                        <center> <h5> Total number of Gene Product IDs per GO term </h5></center>
+                                                        <p> </p>
+
+                                                        <p:commandButton style="font-size: 7px;" icon="ui-icon-info"  id="tooltipf" />
+                                                        <p:tooltip id="genepergo" for="tooltipf">
+                                                            <h:panelGroup>
+                                                                <h:outputText value="Visualize changes in GO term usage."/> <br />
+                                                                <h:outputText value="as they gain or loose gene products "/><br />
+                                                                <h:outputText value="associated over time."/> 
+                                                            </h:panelGroup>
+                                                        </p:tooltip>
+                                                        <div id="visual2" style="width: 600px; height: 400px;"></div>                                   
+                                                        <p> </p>
+
+                                                        <p:commandButton value="Download" ajax="false"  onclick="PrimeFaces.monitorDownload(start, stop);"
+                                                                         icon="ui-icon-arrowthick-1-s" action="#{userRequestBean.deletefig1file}"
+                                                                         oncomplete="statusDialog.hide();">
+                                                            <p:fileDownload value="#{userRequestBean.fileAllGenesPerGoterm}" />
+                                                        </p:commandButton>
+                                                    </p:tab>
+
+                                                </p:tabView>
+                                            </p:tab>
+
+                                        </p:tabView>
+                                    </h:form>
+                                </hgroup>
+                                <!-- End of the FUNCTIONALITY CONTENT -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-separator"></div>
+                </div>
+
+                <div class="clearer">&nbsp;</div>
+            </div>
+        </div>
+
+        <!-- This is the end of the two main columns -->
+
+        <div id="footer">
+            <div class="center" id="footer-left">
+                <p>&copy; UBC, Centre of High-throughput Biology, 2014
+                    <a href="terms.xhtml">Terms and Conditions</a>
+                </p>
+            </div>
+        </div>
+    </h:body>
+</html>
+

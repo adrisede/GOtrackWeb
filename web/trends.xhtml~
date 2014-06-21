@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+  <h:head >
+    <title>UBC-CHiBi|GOtrack</title>
+
+
+    <h:outputStylesheet library="css" name="gotrack.css"  />
+    <h:outputStylesheet library="css" name="styles3.css"  />  
+    <script src='https://rawgithub.com/Polychart/polychart2/develop/polychart2.standalone.js' type='text/javascript'></script>
+
+
+    <style>
+      .rChart {
+        display: block;
+        margin-left: auto; 
+        margin-right: auto;
+        width: 1000px;
+        height: 140px;
+      }  
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- Prevents caching at the Proxy Server -->
+
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="GOtrack is an integral tool that reflects the problems and trends in the stability and annotation biases of multiple model organisms." />
+
+    <meta name="keywords" content="genomics,bioinformatics,genetics,gene,function,ontology,biotechnology,medicine,biomedical,meta-analysis,statistics,search,open source,database,software" />
+    <meta name="author" content="GOtrack admin (asedeno@chibi.ubc.ca)" />
+
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization',
+    'version':'1','packages':['timeline']}]}"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization',
+        'version':'1','packages':['motionchart']}]}"></script> 
+
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+                            <script type="text/javascript">
+    /*google.load('visualization', '1', {
+      packages: ['motionchart'], 'language': 'en'
+    });*/
+    var data;
+    function drawVisualization() {
+      eval(data);
+      var motionchart = new google.visualization.MotionChart(document
+              .getElementById('visualization'));
+      motionchart.draw(dataTable, {
+        'width': 700, showSidePanel:false, showChartButtons: false,
+        'height': 400, state: '{"iconType":"LINE", "colorOption":"_UNIQUE_COLOR"}'
+      });
+    }
+
+    var data2;
+    function drawVisualization2() {
+      eval(data2);
+      var v2 = document
+              .getElementById('visualization2');
+      if (v2 == null) {
+        var tab2 = document
+                .getElementById('initial:tabView:tab2');
+        var div = document.createElement('div');
+        div.id = "visualization2";
+        tab2.appendChild(div);
+        v2 = document
+                .getElementById('visualization2');
+      }
+      var motionchart2 = new google.visualization.MotionChart(v2);
+      motionchart2.draw(dataTable2, {
+        'width': 700,showChartButtons: false,showSidePanel:false,
+        'height': 400, state: '{"iconType":"LINE", "colorOption":"_UNIQUE_COLOR"}'
+      });
+    }
+    function callgoogle2() {
+      data2 = document.getElementById('initial:tabView:hidden3').value;
+      google.setOnLoadCallback(drawVisualization2());
+    }
+
+var data3;
+   function drawVisualization3() {
+      eval(data3);
+      var motionchart = new google.visualization.MotionChart(document
+              .getElementById('visualization3'));
+      motionchart.draw(dataTable3, {
+        'width': 700,'showSidePanel':false,showChartButtons: false,
+        'height': 400, state: '{"iconType":"LINE", "colorOption":"_UNIQUE_COLOR"}'
+      });
+    }
+
+    function callgoogle3() {
+      data3 = document.getElementById('initial:tabView:hidden4').value;
+      google.setOnLoadCallback(drawVisualization3());
+    }
+
+    function callgoogle() {
+      data = document.getElementById('initial:tabView:hidden2').value;
+      google.setOnLoadCallback(drawVisualization());
+    }
+
+                        </script>
+  </h:head>
+  <h:body >
+    <div id="site-wrapper">
+      <div id ="header">
+        <div id="top">
+          <div class="left" id="logo">
+            <h:graphicImage library="images"  width="130" height="110" name="logo1.png"/>
+          </div>
+          <div class="left navigation" id="main-nav">
+            <ul class="tabbed">
+              <li >
+                <h:link value="Home" outcome="index" />
+              </li>
+              <li class="current-tab"><a href="trends.xhtml">Global trends</a></li>
+                <li><a href="about.xhtml">Tutorial</a></li>
+              <li><a href="documentation.xhtml">Documentation</a></li>
+              
+              <li><a href="resources.xhtml">Resources</a></li>
+            </ul>
+            <div class="clearer">&nbsp;</div>
+          </div>
+          <div class="clearer">&nbsp;</div>
+        </div>
+      </div>
+      <!-- Beginning of the two main columns -->
+
+      <div class="main" id="main-two-columns">        
+        <!-- MAIN -->
+        <div class="left" id="main-content">
+          <div class="section">
+            <div class="section-title">Global trends for all species</div>
+
+            <div class="post">
+              <div class="post-body">
+
+                <!-- PUT THE ACTUAL CONTENT -->
+                <hgroup>
+                  <!-- <p>Don't forget to read the documentation!</p> 
+                  <p></p>-->
+                  <h:form id="initial">                                    
+
+                    <p:tabView id="tabView" dynamic="true" effect="fade" effectDuration="normal" >
+
+                      <p:tab id="tab1" title="Compare two species">
+                        <h:inputHidden id="hidden2" value="#{statsBean.graph1}" />            
+                        <h:inputHidden id="hidden3" value="#{statsBean.graph2}" />                                                                         
+                        This section allows you to compare data from 2 different species and explore as well changes in different 
+                        parameters of a particular organism. <br></br>
+                        
+                                                <p:commandButton style="font-size: 7px;" icon="ui-icon-info"  id="tooltipf" />
+
+                                                        <p:tooltip id="comparesp" for="tooltipf">
+                                                            <h:panelGroup>
+                                                                <h:outputText value="Explore parameters like:"/> <br />
+                                                                <h:outputText value=" -The avg number of Direct GO terms associated to any gene product, "/> <br />
+                                                                <h:outputText value=" -The avg multifunctionality score (increased 10,000,000x to facilitate comparisons)"/> <br />
+                                                                <h:outputText value=" -The total number of gene product IDs present in each GOA file"/> <br />
+                                                                <h:outputText value=" -The total number of manual annotations promoted to a more specific (child) GOterm"/> <br />
+                                                                <h:outputText value=" -The total number of annots promoted from IEA codes to manual evidence codes with the"/> <br />
+                                                                <h:outputText value="  same of a more specific GOterm and "/><br />
+                                                                <h:outputText value=" -The avg number of GO annots that have negative associations (NOT identifiers) relative"/><br />
+                                                                <h:outputText value="  to the total number of gene products that have at least one negative annotation in each edition."/>
+                                                            </h:panelGroup>
+                                                        </p:tooltip>
+                                                <br></br>
+                                                <p></p>
+                        
+                        <h:outputText value="Select the first species to compare: " />
+                        <p:selectOneMenu value="#{statsBean.species1}">
+                          <f:selectItem itemLabel="Arabidopsis" itemValue="arabidopsis" />
+                          <f:selectItem itemLabel="Chicken" itemValue="chicken" />
+                          <f:selectItem itemLabel="Cow" itemValue="cow" />
+                          <f:selectItem itemLabel="Dictyoselium" itemValue="dicty" />
+                          <f:selectItem itemLabel="Dog" itemValue="dog" />
+                          <f:selectItem itemLabel="Ecoli" itemValue="ecoli" />
+                          <f:selectItem itemLabel="Fly" itemValue="fly" />
+                          <f:selectItem itemLabel="Human" itemValue="human" />
+                          <f:selectItem itemLabel="Mouse" itemValue="mouse" />
+                          <f:selectItem itemLabel="Pig" itemValue="pig" />
+                          <f:selectItem itemLabel="Rat" itemValue="rat" />
+                          <f:selectItem itemLabel="Yeast" itemValue="yeast" />
+                          <f:selectItem itemLabel="Worm" itemValue="worm" />
+                          <f:selectItem itemLabel="Zebrafish" itemValue="zebrafish" />
+                        </p:selectOneMenu> <br></br>
+                        
+                        <h:outputText value="Select the second species to compare: " />
+                        <p:selectOneMenu value="#{statsBean.species2}">
+                          <f:selectItem itemLabel="Arabidopsis" itemValue="arabidopsis" />
+                          <f:selectItem itemLabel="Chicken" itemValue="chicken" />
+                          <f:selectItem itemLabel="Cow" itemValue="cow" />
+                          <f:selectItem itemLabel="Dictyoselium" itemValue="dicty" />
+                          <f:selectItem itemLabel="Dog" itemValue="dog" />
+                          <f:selectItem itemLabel="Ecoli" itemValue="ecoli" />
+                          <f:selectItem itemLabel="Fly" itemValue="fly" />
+                          <f:selectItem itemLabel="Human" itemValue="human" />
+                          <f:selectItem itemLabel="Mouse" itemValue="mouse" />
+                          <f:selectItem itemLabel="Pig" itemValue="pig" />
+                          <f:selectItem itemLabel="Rat" itemValue="rat" />
+                          <f:selectItem itemLabel="Yeast" itemValue="yeast" />
+                          <f:selectItem itemLabel="Worm" itemValue="worm" />
+                          <f:selectItem itemLabel="Zebrafish" itemValue="zebrafish" />
+                        </p:selectOneMenu><br></br>
+                                                
+                        <p:commandButton value="Continue" update="hidden2,hidden3" onclick="butt1.disable();" widgetVar="butt1"
+                                         oncomplete="butt1.enable();callgoogle(); callgoogle2()" actionListener="#{statsBean.compareSpecies}" /> <br></br>
+
+          
+                        <br></br>
+                        <div id="visualization"></div>
+                        <br></br>
+                        
+                       
+
+                        <div id="visualization2" ></div>
+                                                
+                      </p:tab>                           
+
+                      <p:tab id="tab2" title="Global trends per organism">
+                        <h:inputHidden id="hidden4" value="#{statsBean.graph3}" /> 
+                        <h:outputText value="Select one organism to explore its parameters: " />
+                        <p:selectOneMenu value="#{statsBean.specificSpecies}">
+                          <f:selectItem itemLabel="Arabidopsis" itemValue="arabidopsis" />
+                          <f:selectItem itemLabel="Chicken" itemValue="chicken" />
+                          <f:selectItem itemLabel="Cow" itemValue="cow" />
+                          <f:selectItem itemLabel="Dictyoselium" itemValue="dicty" />
+                          <f:selectItem itemLabel="Dog" itemValue="dog" />
+                          <f:selectItem itemLabel="Ecoli" itemValue="ecoli" />
+                          <f:selectItem itemLabel="Fly" itemValue="fly" />
+                          <f:selectItem itemLabel="Human" itemValue="human" />
+                          <f:selectItem itemLabel="Mouse" itemValue="mouse" />
+                          <f:selectItem itemLabel="Pig" itemValue="pig" />
+                          <f:selectItem itemLabel="Rat" itemValue="rat" />
+                          <f:selectItem itemLabel="Yeast" itemValue="yeast" />
+                          <f:selectItem itemLabel="Worm" itemValue="worm" />
+                          <f:selectItem itemLabel="Zebrafish" itemValue="zebrafish" />
+                        </p:selectOneMenu><br></br>
+                        
+                        <p:commandButton value="Continue" update="hidden4" widgetVar="butt2" onclick="butt2.disable();"
+                                         oncomplete="callgoogle3();butt2.enable();" actionListener="#{statsBean.getGlobalParams}" /> <br></br>
+                        
+                        <div id="visualization3" ></div>
+                      </p:tab>
+                    </p:tabView>
+                  </h:form>
+                </hgroup>
+                <!-- End of the FUNCTIONALITY CONTENT -->
+              </div>
+            </div>
+          </div>
+          <div class="content-separator"></div>
+        </div>
+
+        <div class="clearer">&nbsp;</div>
+      </div>
+    </div>
+
+    <!-- This is the end of the two main columns -->
+
+    <div id="footer">
+      <div class="center" id="footer-left">
+        <p>&copy; UBC, Centre of High-throughput Biology, 2014
+         <a href="terms.xhtml">Terms and Conditions</a>
+        </p>
+      </div>
+    </div>
+  </h:body>
+</html>

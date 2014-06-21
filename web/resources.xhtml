@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+
+      >
+    <h:head >
+        <title>UBC-CHiBi|GOtrack</title>
+        <h:outputStylesheet library="css" name="gotrack.css"  />
+        <h:outputStylesheet library="css" name="gstyles3.css"  />  
+        <script src='https://rawgithub.com/Polychart/polychart2/develop/polychart2.standalone.js' type='text/javascript'></script>
+
+
+        <style>
+            .rChart {
+                display: block;
+                margin-left: auto; 
+                margin-right: auto;
+                width: 1000px;
+                height: 140px;
+            }  
+        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <!-- Prevents caching at the Proxy Server -->
+
+        <meta http-equiv="Expires" content="0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="description" content="GOtrack is an integral tool that reflects the problems and trends in the stability and annotation biases of multiple model organisms." />
+
+        <meta name="keywords" content="genomics,bioinformatics,genetics,gene,function,ontology,biotechnology,medicine,biomedical,meta-analysis,statistics,search,open source,database,software" />
+        <meta name="author" content="GOtrack admin (asedeno@chibi.ubc.ca)" />
+
+        <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization',
+        34 'version':'1','packages':['timeline']}]}"></script>
+
+        <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization',
+        'version':'1','packages':['timeline']}]}"></script>
+
+        <!--Load the AJAX API-->
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    </h:head>
+
+  <h:body >
+    <div id="site-wrapper">
+      <div id ="header">
+        <div id="top">
+          <div class="left" id="logo">
+             <h:graphicImage library="images"  width="130" height="110" name="logo1.png"/>
+          </div>
+          <div class="left navigation" id="main-nav">
+            <ul class="tabbed">
+              <li><a href="index.xhtml">Home</a></li>
+              <li><a href="trends.xhtml">Browse Global trends</a></li>
+                <li><a href="about.xhtml">Tutorial</a></li>
+              <li><a href="documentation.xhtml">Documentation</a></li>                                          
+              <li class="current-tab"><a href="resources.xhtml">Resources</a></li>              
+            </ul>
+            <div class="clearer">&nbsp;</div>
+          </div>
+          <div class="clearer">&nbsp;</div>
+        </div>
+      </div>
+
+            <!-- MAIN -->
+            <div class="left" id="main-content">
+                <div class="section">
+                    <div class="section-title">Resources</div>
+                    <div class="section-content">
+                        <div class="post">
+                            <div class="post-body">
+
+                                <strong> Where can I get the original association files used for these analyses?</strong>
+                                <p>
+                                    The files for most of the species were obtained from:
+                                    <a href="ftp://ftp.ebi.ac.uk/pub/databases/GO/goa/old/">EBI</a></p>
+                                <p>Ecoli data (ecocyc) was obtained from: <a href="http://cvsweb.geneontology.org/cgi-bin/cvsweb.cgi/go/gene-associations/">Gene Ontology</a></p>   
+                                 <p> Fly data was obtained from:
+                                 <a href="ftp://ftp.flybase.org/releases/">FlyBase (older editions)</a> and 
+                                 <a href="ftp://ftp.ebi.ac.uk/pub/databases/GO/goa/old/FLY/">EBI (newer editions)</a></p>
+                                 <p>Yeast data was retrieved from: <a href="ftp://ftp.ebi.ac.uk/pub/databases/GO/goa/old/YEAST/">EBI (newer editions)</a> and 
+                                 <a href="http://downloads.yeastgenome.org/curation/literature/archive/">SGD (older editions)</a>
+                                 </p>
+                                 <p></p>
+                                 <strong>What files were used to map the identifiers?</strong>
+                                <p>
+                                    Part of the yeast mapping was done with information from the <a href="http://www.uniprot.org/docs/yeast">Uniprot</a> website. </p>
+                                 <p>For selected organisms, the <a href="ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/">Uniprot Mapping</a>
+                                    file was used </p>
+                                
+                                <p> However, as some of these files do not have the latest (current) identifier used in many cases, a direct query to the Uniprot website was 
+                                   performed to keep them up-to-date. 
+                                    </p>
+
+                                <strong>Where can I get the mapping from Medline to Pubmed Ids? </strong>
+                                <p>Mapping the MEDLINE identifiers with current PMID identifiers was done using the MuID-Pmid(1-6).zip files from
+                                    <a href="ftp://ftp.ncbi.nlm.nih.gov/pubmed/">NCBI</a>             
+                                </p>
+
+                                                                
+                                <p>
+                                </p>
+                                    <p>
+                                    </p>
+                                    <p>
+                                    </p>
+                                <strong>What components and tools were used to build this site?</strong>
+
+                                <p>Eclipse Java EE IDE Juno Service Release 1(c)</p>
+                                <p>Netbeans IDE 7.4 Patch 1 (c)</p>
+                                <p>Java 1.7.0_25 HotSpot(TM) 64-Bit Server VM 23.25-b01 (c)</p>
+                                <p>Java(TM) SE Runtime Environment 1.7.0_25-b15 (c)</p>
+                                <p>Ubuntu Linux 12.04.1 version 3.2.0-56 amd64</p>
+                                <p>Maven 3.1.0-bin</p>
+                                <p>Java Server Faces</p>        
+                                <p>Primefaces 3.5</p>
+                                <p>Google viz</p>
+                                <p>mySQL 5.5.34, ver 10</p>
+                                        
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-separator"></div>
+                </div>
+
+                <div class="clearer">&nbsp;</div>
+            </div>
+        </div>
+
+        <!-- This is the end of the two main columns -->
+
+        <div id="footer">
+            <div class="center" id="footer-left">
+                <p>&copy; UBC, Centre of High-throughput Biology, 2014
+                     <a href="terms.xhtml">Terms and Conditions</a>
+                </p>
+            </div>
+        </div>
+    </h:body>
+</html>
