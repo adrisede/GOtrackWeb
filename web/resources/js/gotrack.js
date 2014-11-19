@@ -20,7 +20,7 @@ function drawVisualization() {
     "yAxisOption": "2",
     "xAxisOption": "_TIME",
     "iconType": "LINE",
-    "showTrails": false,
+    "showTrails": false,   
     "sizeOption": "_UNISIZE", 'showSidePanel':false, showChartButtons: false,
     "orderedByY": false,state: '{"iconType":"LINE", "colorOption":"_UNIQUE_COLOR"}'
   });

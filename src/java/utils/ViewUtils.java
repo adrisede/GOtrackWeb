@@ -48,6 +48,11 @@ public class ViewUtils {
     return geneFunctionalities;
   }
 
+  /**
+   * Transform the database object to a view object ready to be displayed by the view
+   * @param count
+   * @return 
+   */
   public static ArrayList<countViewBean> getCount(ArrayList<CountGOTermsDirectInferred> count) {
     //Get max number of editions
     Integer maxNumberOfEditions = 0;
@@ -98,11 +103,7 @@ public class ViewUtils {
 
     //look directly if userInpur is currently a gene or symbol, get all its
     //uniprots
-    HashSet<String> allGenesToConsider = dao.getDirectGenes(species, userInput);
-    //Look for synonyms in the dictionary
-    //HashSet<String> synonyms = dao.lookUniprotInDic(species, userInput);
-
-    //allGenesToConsider.addAll(synonyms);
+    HashSet<String> allGenesToConsider = dao.getDirectGenes(species, userInput);   
 
     //Look for replaced ids
     allGenesToConsider.addAll(dao.getReplacedElements(species, userInput));
@@ -215,6 +216,12 @@ public class ViewUtils {
     return var.toString();
   }
 
+  /**
+   * Returns only the var "data" from a given list of Evidence code
+   *
+   * @param table
+   * @return var data. used in DrawVisualization();
+   */
   public static DataTable transformECDataTable(List<EvidenceCodeBean> table) throws TypeMismatchException {
 
     DataTable data = new DataTable();
@@ -301,6 +308,13 @@ public class ViewUtils {
     return var.toString();
   }
 
+  /**
+   * Transforms s list of Stats1 object into a String ready to be displayed by 
+   * the google api
+   * 
+   * @param table
+   * @return 
+   */
   public static String transformStats1tring(List<Stats1> table) {
 
     StringBuilder var = new StringBuilder();
@@ -346,7 +360,12 @@ public class ViewUtils {
     var.append(" ]);");
     return var.toString();
   }
-  
+  /**
+   * Returns only the var "data" from a given list of stats1
+   *
+   * @param table
+   * @return var data. used in DrawVisualization();
+   */
   public static String transformStatsPerSpecies(List<Stats1> table, String species) {
 
     StringBuilder var = new StringBuilder();
@@ -414,7 +433,12 @@ public class ViewUtils {
     var.append(" ]);");
     return var.toString();
   }
-  
+  /**
+   * Returns only the var "data" from a given list of stats2
+   *
+   * @param table
+   * @return var data. used in DrawVisualization();
+   */
    public static String transformStats2tring(List<Stats2> table) {
 
     StringBuilder var = new StringBuilder();

@@ -1,6 +1,7 @@
 /*
-* To change this template, choose Tools | Templates
-* and open the template in the editor.
+* Class that implements a row tha contains
+ * String ontology;
+   ArrayList<String> functions;
 */
 package beans;
 

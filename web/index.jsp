@@ -203,7 +203,7 @@
             </div>
 
             <footer id="Footer">
-                <p>&copy; UBC, Centre of High-throughput Biology, 2013</p>
+                <p>&copy; UBC, Centre of High-throughput Biology, 2014</p>
                 <a href="terms.xhtml">Terms and Conditions</a> </footer>
         </div>
     </body>

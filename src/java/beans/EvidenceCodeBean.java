@@ -1,6 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Class that implements the abstraction of a row that contains
+ *  String uniprot;
+    String goterm;
+    String pubmed;
+    String evidence;
+    Date dateStart;
+    Date dateEnd;
  */
 package beans;
 

@@ -1,6 +1,12 @@
 /*
-* To change this template, choose Tools | Templates
-* and open the template in the editor.
+* Class that implements the abstraction of a row tha contains
+ * private String geneid;
+     String direct;
+     String inferred;
+     String edition;
+     String ratio;
+     String symbol;
+     String date;
 */
 package beans;
 

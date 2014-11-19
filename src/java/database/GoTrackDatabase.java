@@ -10,6 +10,14 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * GoTrackDB extends this class.
+ * GoTrackDatabase implements generic functions to make
+ * a connection to the database.
+ * It contains the methods to read the connection parameters from the properties
+ * file-
+ * @author asedeno
+ */
 public class GoTrackDatabase {
 
   protected Connection connect = null;

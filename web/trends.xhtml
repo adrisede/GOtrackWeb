@@ -50,7 +50,7 @@
       var motionchart = new google.visualization.MotionChart(document
               .getElementById('visualization'));
       motionchart.draw(dataTable, {
-        'width': 700, showSidePanel:false, showChartButtons: false,
+        'width': 700,  showChartButtons: false,
         'height': 400, state: '{"iconType":"LINE", "colorOption":"_UNIQUE_COLOR"}'
       });
     }
@@ -71,7 +71,7 @@
       }
       var motionchart2 = new google.visualization.MotionChart(v2);
       motionchart2.draw(dataTable2, {
-        'width': 700,showChartButtons: false,showSidePanel:false,
+        'width': 700,showChartButtons: false,
         'height': 400, state: '{"iconType":"LINE", "colorOption":"_UNIQUE_COLOR"}'
       });
     }
@@ -86,7 +86,7 @@ var data3;
       var motionchart = new google.visualization.MotionChart(document
               .getElementById('visualization3'));
       motionchart.draw(dataTable3, {
-        'width': 700,'showSidePanel':false,showChartButtons: false,
+        'width': 700,showChartButtons: false,
         'height': 400, state: '{"iconType":"LINE", "colorOption":"_UNIQUE_COLOR"}'
       });
     }

@@ -27,13 +27,22 @@ import org.primefaces.model.StreamedContent;
 
 /**
  *
+ * Class to download information from the server
+ * 
  * @author asedeno
  */
 public class DownloadData {
 
   public static String TMPDIR = "/resources/tmp/";
   public static String TXTTYPE = "text/txt";
-
+/**
+   * Generic function to download a file
+   * @param f
+   * @param userfileName
+   * @param filetype
+   * @return
+   * @throws FileNotFoundException 
+   */
   public static StreamedContent downloadFile(File f, String userfileName, String filetype) throws FileNotFoundException {
     if (f == null) {
       return null;
@@ -41,15 +50,13 @@ public class DownloadData {
 
     StreamedContent files;
     InputStream stream;
-    /*stream = ((ServletContext) FacesContext.getCurrentInstance().
-     getExternalContext().getContext()).getResourceAsStream(TMPDIR+serverfile);*/
     stream = new FileInputStream(f);
     files = new DefaultStreamedContent(stream, filetype, userfileName);
     return files;
   }
 
   /**
-   *
+   * Create a temporary file for figure no 1
    * @param serverFile
    * @param count
    * @return
@@ -83,7 +90,13 @@ public class DownloadData {
     }
     return f;
   }
-
+  
+/**
+   * Create temporary file
+   * @param serverFile
+   * @param count
+   * @return 
+   */
   public static File createTmpFileFig1_2(String serverFile, ArrayList<CountGOTermsOverTimeBean> count) {
     File f = null;
     try {
@@ -117,7 +130,13 @@ public class DownloadData {
     }
     return f;
   }
-
+  
+/**
+   * Create temporary file of pubmed table
+   * @param serverFile
+   * @param pubmedtable
+   * @return 
+   */
   public static File createTmpPubmedTable(String serverFile, List<pumedEntryBean> pubmedtable) {
     File f = null;
     try {
@@ -138,7 +157,12 @@ public class DownloadData {
     }
     return f;
   }
-
+/**
+   * Create temporary file for evidence code history table
+   * @param serverFile
+   * @param ecode
+   * @return 
+   */
   public static File createTmpEcodeHist(String serverFile, ArrayList<EvidenceCodeBean> ecode) {
     File f = null;
     try {
@@ -174,7 +198,13 @@ public class DownloadData {
     return f;
   }
   
-    public static File createTmpAllGenesPerGoterm(String serverFile,  ArrayList<CountGenesPerGoBean> count) {
+  /**
+   * Create temporary file for all genes per go term table
+   * @param serverFile
+   * @param count
+   * @return 
+   */
+  public static File createTmpAllGenesPerGoterm(String serverFile,  ArrayList<CountGenesPerGoBean> count) {
     File f = null;
     try {
       f = File.createTempFile(serverFile, "tmp");
@@ -204,8 +234,13 @@ public class DownloadData {
     }
     return f;
   }
-    
-     public static File createTmpAllGenesPerSpeciesOrderedByMultifunc(
+    /**
+   * Create temporary file for all genes per species table
+   * @param serverFile
+   * @param topMultifuncSpecies
+   * @return 
+   */
+  public static File createTmpAllGenesPerSpeciesOrderedByMultifunc(
              String serverFile,  List<String> topMultifuncSpecies) {
     File f = null;
     try {

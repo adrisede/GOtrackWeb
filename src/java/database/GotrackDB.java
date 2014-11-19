@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import beans.GeneGoGoNames;
 import beans.view.CountGenesPerGoBean;
 import beans.view.Stats1;
@@ -21,8 +20,18 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class implements all the methods to query the database
+ * Given the Database design the queries must be created dynamically in function
+ * of the species and user input
+ * 
+ * @author asedeno
+ */
 public class GotrackDB extends GoTrackDatabase {
 
+    /**
+     * Close connection instance of this class
+     */
   public void closeGotrackConnection() {
     if (this.connect != null) {
       try {
@@ -34,7 +43,9 @@ public class GotrackDB extends GoTrackDatabase {
   }
 
   /**
-   *
+   * Query the *_unique_gene_symbol table looking for the symbol or gene 
+   * provided by user
+   * 
    * @param species
    * @param symbolOrGene
    * @param symbols (output)
@@ -72,6 +83,12 @@ public class GotrackDB extends GoTrackDatabase {
     return res;
   }
 
+  /**
+   * Given a goterm id, this function will get the human readable name of the 
+   * goterm in the latest version of the tree
+   * @param goterm
+   * @return 
+   */
   public String getGOnames(String goterm) {
     PreparedStatement prepStmt = null;
     String goname = "";
@@ -99,84 +116,16 @@ public class GotrackDB extends GoTrackDatabase {
     }
     return goname;
   }
-
+  
+  
   /**
-   * This function will get all the synonyms found in species dictionary
-   *   
-* @param species
-   * @param userInput
-   * @return
+   * This function uses table *_replaced_id to find ids that were mapped to a
+   * most updated symbol
+   * 
+   * @param species
+   * @param ids
+   * @return Set of replaced id
    */
-  public HashSet<String> lookUniprotInDic(String species, String userInput) {
-    HashSet<String> res = new HashSet<String>();
-
-    PreparedStatement prepStmt = null;
-
-    try {
-      String sqlStmt = "SELECT distinct(uniprot) as uniprot FROM "
-              + species
-              + "_dictionary where synonym like ? ";
-      prepStmt = connect.prepareStatement(sqlStmt);
-      prepStmt.setString(1, "%" + userInput + "%");
-      Logger.getLogger(GotrackDB.class.getName()).log(Level.FINE,
-              "Prepared Statement:\n\t{0}", prepStmt.toString());
-      ResultSet rs = prepStmt.executeQuery();
-      while (rs.next()) {
-        res.add(rs.getString("uniprot"));
-      }
-      rs.close();
-    } catch (SQLException e) {
-      Logger.getLogger(GotrackDB.class.getName()).log(Level.SEVERE, null, e);
-    } finally {
-      if (prepStmt != null) {
-        try {
-          prepStmt.close();
-        } catch (SQLException ex) {
-          Logger.getLogger(GotrackDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-      }
-    }
-    return res;
-  }
-
-  public HashSet<String> lookSynInDic(String species, HashSet<String> ids) {
-    HashSet<String> res = new HashSet<String>();
-    String allIds = "";
-    for (String id : ids) {
-      allIds += id + "|";
-    }
-    if (allIds.length() > 0) {
-      allIds = allIds.substring(0, allIds.length() - 1);
-    }
-
-    PreparedStatement prepStmt = null;
-
-    try {
-      String sqlStmt = "SELECT distinct(synonym) as synonym FROM "
-              + species
-              + "_dictionary where uniprot REGEXP '" + allIds + "'";
-      prepStmt = connect.prepareStatement(sqlStmt);
-      Logger.getLogger(GotrackDB.class.getName()).log(Level.FINE,
-              "Prepared Statement:\n\t{0}", prepStmt.toString());
-      ResultSet rs = prepStmt.executeQuery();
-      while (rs.next()) {
-        res.add(rs.getString("synonym"));
-      }
-      rs.close();
-    } catch (SQLException e) {
-      Logger.getLogger(GotrackDB.class.getName()).log(Level.SEVERE, null, e);
-    } finally {
-      if (prepStmt != null) {
-        try {
-          prepStmt.close();
-        } catch (SQLException ex) {
-          Logger.getLogger(GotrackDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-      }
-    }
-    return res;
-  }
-
   public HashSet<String> getReplacedElements(String species, String ids) {
     HashSet<String> replaced = new HashSet<String>();
 
@@ -216,6 +165,16 @@ public class GotrackDB extends GoTrackDatabase {
     return replaced;
   }
 
+  /**
+   * This function queries table *_count to gets gene,symbol,directs, inferred, 
+   * edition , directs/inferred (ratio), jaccard, multifunc,date of a set of ids
+   * It will get as well the average of all the above mentioned values of the
+   * given species.
+   * 
+   * @param species
+   * @param geneids List of gene ids to query
+   * @return ArrayList of objects that represent each row of the table
+   */
   public ArrayList<CountGOTermsOverTimeBean> countDirectInferredParents(String species, HashSet<String> geneids) {
     String allIds = "";
     for (String id : geneids) {
@@ -232,7 +191,10 @@ public class GotrackDB extends GoTrackDatabase {
     }
 
     PreparedStatement prepStmt = null;
-
+   /*This query consists of the union of two queries. The first one will get the
+     information of the input list of genes.
+     The second query will get the average of the entire species
+     */
     try {
       String sqlStmt =
               "(SELECT gene,symbol,directs, inferred, edition , directs/inferred as ratio, jaccard, multifunc,date "
@@ -317,6 +279,17 @@ public class GotrackDB extends GoTrackDatabase {
     return res;
   }
 
+  /**
+   * This function receive a list of gene ids and a list of goterms
+   * 
+   * It will return the relationship between gene, goterm, pubmed, code and date
+   * 
+   * @param species
+   * @param geneids
+   * @param goterms
+   * @return A list of objects that represent the history of the pubmed ids
+   * associated to the list of gene ids and goterms
+   */
   public ArrayList<EvidenceCodeBean> getEvidenceCodeHistory(String species,
           ArrayList<String> geneids, ArrayList<String> goterms) {
     String allIds = "";
@@ -426,6 +399,14 @@ public class GotrackDB extends GoTrackDatabase {
     return res;
   }
 
+  /**
+   * This function is called by getEvidenceCodeHistory when that function gets
+   * no data
+   * 
+   * @param species
+   * @param geneidswithNoData
+   * @return 
+   */
   public ArrayList<EvidenceCodeBean> getEvidenceCodeHistory2(String species,
           HashSet<String> geneidswithNoData) {
     ArrayList<String> geneids = new ArrayList<String>();
@@ -495,6 +476,9 @@ public class GotrackDB extends GoTrackDatabase {
 
         String pubmed = rs.getString("pubmed");
         if (pubmed != null) {
+          if(pubmed.contains(":")){
+            pubmed = pubmed.substring(pubmed.indexOf(":")+1, pubmed.length());
+          }
           t.setPubmed(pubmed);
         } else {
           t.setPubmed(null);
@@ -532,55 +516,15 @@ public class GotrackDB extends GoTrackDatabase {
     return res;
   }
 
-  public ArrayList<CountGOTermsOverTimeBean> getJaccardSim(String species,
-          HashSet<String> geneids, ArrayList<CountGOTermsOverTimeBean> count) {
-    String allIds = "";
-    for (String id : geneids) {
-      allIds += "'" + id + "'" + ",";
-    }
-    if (allIds.length() > 0) {
-      allIds = allIds.substring(0, allIds.length() - 1);
-    }
-
-    PreparedStatement prepStmt = null;
-    try {
-      String sqlStmt = "SELECT gene, edition, value FROM " + species
-              + "_jaccard_sim where gene in (" + allIds + ")";
-      Logger.getLogger(GotrackDB.class.getName()).log(Level.FINE,
-              "SQL Statement:\n\t{0}", sqlStmt);
-      prepStmt = connect.prepareStatement(sqlStmt);
-      ResultSet rs = prepStmt.executeQuery();
-      while (rs.next()) {
-        String gene = rs.getString("gene");
-        String edition = rs.getString("edition");
-        String jaccard = rs.getString("value");
-        for (CountGOTermsOverTimeBean adt : count) {
-          if (adt.getGene().compareTo(gene) == 0) {
-            if (adt.getEdition().intValue() == Integer.valueOf(edition).intValue()) {
-              if (jaccard != null) {
-                adt.setJaccardSim(Double.valueOf(jaccard));
-              } else {
-                adt.setJaccardSim(null);
-              }
-            }
-          }
-        }
-      }
-      rs.close();
-    } catch (SQLException e) {
-      Logger.getLogger(GotrackDB.class.getName()).log(Level.SEVERE, null, e);
-    } finally {
-      if (prepStmt != null) {
-        try {
-          prepStmt.close();
-        } catch (SQLException ex) {
-          Logger.getLogger(GotrackDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-      }
-    }
-    return count;
-  }
-
+  /**
+   * Use table go_names and *_gene_annot to get the relationship between
+   * the gene annotation and the goterm name
+   * 
+   * @param geneids
+   * @param ontology
+   * @param species
+   * @return 
+   */
   public ArrayList<GeneGoGoNames> getGeneGotermGoName(HashSet<String> geneids,
           String ontology, String species) {
     String allIds = "";
@@ -600,7 +544,6 @@ public class GotrackDB extends GoTrackDatabase {
     PreparedStatement prepStmt = null;
     try {
       String sqlStmt = "select gnam.name as goname, gnam.goterm as goterm, gene from "
-              + " (SELECT distinct(name) as name, goterm FROM GO_names where date = (select max(date) from GO_names)) gnam join"
               + " (select distinct(goterm) as goterm, gene from " + species + "_gene_annot h where h.ontology = ? "
               + "and h.gene in (" + allIds + ") ) hga on hga.goterm = gnam.goterm where gnam.name !='' ";
             
@@ -636,6 +579,14 @@ public class GotrackDB extends GoTrackDatabase {
     return result;
   }
 
+  /**
+   * Get the relationship of go name go term of a given ontology
+   * 
+   * @param ontology
+   * @param species
+   * @param go
+   * @return 
+   */
   public ArrayList<GeneGoGoNames> getGeneGotermGoNameSingleGoterm(String ontology, String species, String go) {
     ArrayList<GeneGoGoNames> result = new ArrayList<GeneGoGoNames>();
     PreparedStatement prepStmt = null;
@@ -670,10 +621,21 @@ public class GotrackDB extends GoTrackDatabase {
     return result;
   }
 
+  /**
+   * Given a list of go terms it will get the number of annotations related to 
+   * the go terms per date
+   * 
+   * @param userInput
+   * @param species
+   * @return 
+   */
   public ArrayList<CountGenesPerGoBean> countGenesPerGOTerm(ArrayList<GeneGoGoNames> userInput,
           String species) {
     ArrayList<CountGenesPerGoBean> count = new ArrayList<CountGenesPerGoBean>();
     String goterms = "";
+    
+    /*userInput has all the goterms available but user might have picked only
+     a few on them.*/
     for (GeneGoGoNames adt : userInput) {
       if (adt.getIsPickedbyUser()) {
         if (goterms.compareTo("") == 0) {
@@ -689,14 +651,18 @@ public class GotrackDB extends GoTrackDatabase {
 
     PreparedStatement prepStmt = null;
     try {
+      /* This query use table 
+         * (*_gene_per_go join  edition_to_date) join go_names
+         */
       String sqlStmt;
-      sqlStmt = "select gnam.goterm as goterm , value, edition, count.date as date , editionNo, gnam.name  as name from "
+      sqlStmt = "select gnam.goterm as goterm , value, edition, "
+              + "count.date as date , editionNo, gnam.name  as name from "
               + "("
-              + "select * from (select distinct(goterm), value, edition "
-              + "FROM " + species + "_gene_per_go where goterm in(" + goterms + ")) hgpg join "
-              + "(select date, editionNo from edition_to_date where species ="
-              + "(select objNo from species where name = ?)) etd on "
-              + "etd.editionNo = hgpg.edition"
+              +   "select * from (select distinct(goterm), value, edition "
+              +   "FROM " + species + "_gene_per_go where goterm in(" + goterms + ")) hgpg join "
+              +   "(select date, editionNo from edition_to_date where species ="
+              +   "(select objNo from species where name = ?)) etd on "
+              +   "etd.editionNo = hgpg.edition"
               + ")count join GO_names gnam on count.goterm=gnam.goterm and month(count.date) = month(gnam.date) and year(count.date)=year(gnam.date);";
       prepStmt = connect.prepareStatement(sqlStmt);
       prepStmt.setString(1, species);
@@ -738,6 +704,9 @@ public class GotrackDB extends GoTrackDatabase {
 
   /**
    * This function get exactly which genes are associated to the list of goterms
+   * @param userInput
+   * @param species
+   * @return 
    */
   public ArrayList<CountGenesPerGoBean> allGenesPerGOTerm(ArrayList<GeneGoGoNames> userInput,
           String species) {
@@ -759,6 +728,7 @@ public class GotrackDB extends GoTrackDatabase {
     PreparedStatement prepStmt = null;
     try {
       String sqlStmt;
+      /**/
       sqlStmt = "select hgpg.gene as gene ,hgpg.symbol as symbol , hgpg.goterm as goterm ,etd.date as date "
               + "from (SELECT distinct gene,symbol, edition, goterm FROM "
               + species + "_gene_annot where goterm in(" + goterms + ")) hgpg join "
@@ -817,56 +787,15 @@ public class GotrackDB extends GoTrackDatabase {
     return count;
   }
 
-  public ArrayList<CountGOTermsOverTimeBean> getMultifuncScore(ArrayList<CountGOTermsOverTimeBean> count,
-          HashSet<String> geneids, String species) {
-
-    String allIds = "";
-    for (String id : geneids) {
-      allIds += "'" + id + "'" + ",";
-    }
-    if (allIds.length() > 0) {
-      allIds = allIds.substring(0, allIds.length() - 1);
-    }
-
-    PreparedStatement prepStmt = null;
-    try {
-      String sqlStmt = "SELECT gene, value, edition FROM " + species + "_multif_score where gene in (" + allIds + ")";
-      prepStmt = connect.prepareStatement(sqlStmt);
-      System.out.println();
-      Logger.getLogger(GotrackDB.class.getName()).log(Level.FINE,
-              "Prepared Statement after bind variables set:\n\t{0}",
-              prepStmt.toString());
-      ResultSet rs = prepStmt.executeQuery();
-      while (rs.next()) {
-        String gene = rs.getString("gene");
-        String value = rs.getString("value");
-        String edition = rs.getString("edition");
-        for (CountGOTermsOverTimeBean adt : count) {
-          if (adt.getGene().compareTo(gene) == 0) {
-            if (adt.getEdition().intValue() == Integer.valueOf(edition).intValue()) {
-              adt.setMultifunc(Double.valueOf(value));
-            }
-          }
-        }
-      }
-      rs.close();
-    } catch (SQLException e) {
-      Logger.getLogger(GotrackDB.class.getName()).log(Level.SEVERE, null, e);
-    } finally {
-      if (prepStmt != null) {
-        try {
-          prepStmt.close();
-        } catch (SQLException ex) {
-          Logger.getLogger(GotrackDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-      }
-    }
-    return count;
-  }
-
+  
   /*-----------------Global stats functions-----------------------------*/
+  
+  
   /**
-   *
+   * Get the average results in table avgAllSpeciesCount of two species
+   * @param species1
+   * @param species2
+   * @return 
    */
   public ArrayList<Stats1> getStats1(String species1, String species2) {
 
@@ -917,6 +846,18 @@ public class GotrackDB extends GoTrackDatabase {
     return result;
   }
 
+  /**
+   * Gets the number of annotations that:
+   * 1.- Changed from IEA to Manual
+   * 2.- Changed from a general annotation to a specific
+   * 3.- Not Annotation ratio
+   * 4.- Date
+   * 
+   * 
+   * @param species1
+   * @param species2
+   * @return 
+   */
   public ArrayList<Stats2> getStats2(String species1, String species2) {
 
     ArrayList<Stats2> result = new ArrayList<Stats2>();
@@ -963,6 +904,19 @@ public class GotrackDB extends GoTrackDatabase {
     return result;
   }
 
+  /**
+   * Use table *_avg to get the average of 
+   * 1.- Direct go terms
+   * 2.- Inferred go terms
+   * 3.- multifunctionality score *10000000
+   * 4.- jaccard similarity score
+   * 5.- unique gene products
+   * 6.- Annotations from general to specific
+   * 7.- No annotation ratio
+   * 
+   * @param species
+   * @return 
+   */
   public ArrayList<Stats1> getStatsPerSpecies(String species) {
 
     ArrayList<Stats1> result = new ArrayList<Stats1>();
@@ -1013,14 +967,24 @@ public class GotrackDB extends GoTrackDatabase {
     return result;
   }
 
-  public void updatePopularGenes(HashSet<String> allIds, String species) {
-    for (String symbol : allIds) {
+  /**
+   * Store user input to keep track the most frequent ids/symbols searched by 
+   * users
+   * 
+   * Store the value in popularGenes table and update the times the term has
+   * been searched
+   * 
+   * @param symbol
+   * @param species 
+   */
+  public void updatePopularGenes(String symbol, String species) {
+    
 
       PreparedStatement statement = null;
 
       try {
         if (symbol.contains("Average")) {
-          continue;
+          return;
         }
         statement = connect.prepareStatement(
                 "INSERT INTO  popularGenes (gene,hits) VALUES (?,1)"
@@ -1039,9 +1003,15 @@ public class GotrackDB extends GoTrackDatabase {
           }
         }
       }
-    }
+    
   }
 
+  /**
+   * Get the most popular genes based on user input
+   * It will look at table populargenes
+   * 
+   * @return Array of top 10 popular genes 
+   */
   public String[] getPopularGenes() {
 
     String[] result = new String[10];
@@ -1078,40 +1048,47 @@ public class GotrackDB extends GoTrackDatabase {
     return result;
   }
 
+  /**
+   * Queries all the *_count tables to get the top 10 multifunctionality ids
+   * per species on the last edition
+   * @return 
+   */
   public List<String> getTopMultifunc() {
 
     List<String> result = new ArrayList<String>();
 
     PreparedStatement prepStmt = null;
     try {
+        /*Query made out of several unions one per species
+         */
       String sqlStmt =
-              "(select symbol, multifunc, edition, 'human' as species from human_count a where multifunc is not null and edition = (select max(edition) from human_count) order by multifunc desc  limit 1) \n"
+              "(select symbol, multifunc, edition, 'human' as species from human_count a where multifunc is not null and edition = (select max(edition) from human_count where multifunc is not null) order by multifunc desc  limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition, 'arabidopsis' as species from arabidopsis_count b where multifunc is not null  and edition = (select max(edition) from arabidopsis_count) order by multifunc desc  limit 1) \n"
+              + "(select symbol, multifunc, edition, 'arabidopsis' as species from arabidopsis_count b where multifunc is not null  and edition = (select max(edition) from arabidopsis_count where multifunc is not null) order by multifunc desc  limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition, 'chicken' as species from chicken_count c  where multifunc is not null  and edition = (select max(edition) from chicken_count) order by multifunc desc limit 1) \n"
+              + "(select symbol, multifunc, edition, 'chicken' as species from chicken_count c  where multifunc is not null  and edition = (select max(edition) from chicken_count where multifunc is not null) order by multifunc desc limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition, 'cow' as species from cow_count d  where multifunc is not null and edition = (select max(edition) from cow_count ) order by multifunc desc  limit 1) \n"
+              + "(select symbol, multifunc, edition, 'cow' as species from cow_count d  where multifunc is not null and edition = (select max(edition) from cow_count where multifunc is not null) order by multifunc desc  limit 1) \n"
               + "union \n"
-              + "(select symbol, multifunc, edition, 'dicty' as species from dicty_count e  where multifunc is not null and edition = (select max(edition) from dicty_count) order by multifunc desc  limit 1) \n"
+              + "(select symbol, multifunc, edition, 'dicty' as species from dicty_count e  where multifunc is not null and edition = (select max(edition) from dicty_count where multifunc is not null) order by multifunc desc  limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition, 'dog' as species from dog_count f where multifunc is not null and edition = (select max(edition) from dog_count) order by multifunc desc  limit 1) \n"
+              + "(select symbol, multifunc, edition, 'dog' as species from dog_count f where multifunc is not null and edition = (select max(edition) from dog_count where multifunc is not null) order by multifunc desc  limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition, 'fly' as species from fly_count g where multifunc is not null and edition = (select max(edition) from fly_count) order by multifunc desc  limit 1) \n"
+              + "(select symbol, multifunc, edition, 'fly' as species from fly_count g where multifunc is not null and edition = (select max(edition) from fly_count where multifunc is not null) order by multifunc desc  limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition , 'mouse' as species from mouse_count h  where multifunc is not null and edition = (select max(edition) from mouse_count) order by multifunc desc  limit 1) \n"
+              + "(select symbol, multifunc, edition , 'mouse' as species from mouse_count h  where multifunc is not null and edition = (select max(edition) from mouse_count where multifunc is not null) order by multifunc desc  limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition,'pig' as species from pig_count i where multifunc is not null and edition = (select max(edition) from pig_count) order by multifunc desc limit 1) \n"
+              + "(select symbol, multifunc, edition,'pig' as species from pig_count i where multifunc is not null and edition = (select max(edition) from pig_count where multifunc is not null) order by multifunc desc limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition, 'rat' as species from rat_count j where multifunc is not null and edition = (select max(edition) from rat_count) order by multifunc desc limit 1) \n"
+              + "(select symbol, multifunc, edition, 'rat' as species from rat_count j where multifunc is not null and edition = (select max(edition) from rat_count where multifunc is not null) order by multifunc desc limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition, 'worm' as species from worm_count k  where multifunc is not null and edition = (select max(edition) from worm_count) order by multifunc desc  limit 1) \n"
+              + "(select symbol, multifunc, edition, 'worm' as species from worm_count k  where multifunc is not null and edition = (select max(edition) from worm_count where multifunc is not null) order by multifunc desc  limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition, 'yeast' as species from yeast_count l  where multifunc is not null and edition = (select max(edition) from yeast_count) order by multifunc desc limit 1) \n"
+              + "(select symbol, multifunc, edition, 'yeast' as species from yeast_count l  where multifunc is not null and edition = (select max(edition) from yeast_count where multifunc is not null) order by multifunc desc limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition, 'zebrafish' as species from zebrafish_count n  where multifunc is not null and edition = (select max(edition) from zebrafish_count) order by multifunc desc limit 1) \n"
+              + "(select symbol, multifunc, edition, 'zebrafish' as species from zebrafish_count n  where multifunc is not null and edition = (select max(edition) from zebrafish_count where multifunc is not null) order by multifunc desc limit 1) \n"
               + "union all\n"
-              + "(select symbol, multifunc, edition,'ecoli' as species  from ecoli_count o where multifunc is not null and edition = (select max(edition) from ecoli_count) order by multifunc desc limit 1) \n";
+              + "(select symbol, multifunc, edition,'ecoli' as species  from ecoli_count o where multifunc is not null and edition = (select max(edition) from ecoli_count where multifunc is not null) order by multifunc desc limit 1) \n";
       Logger.getLogger(GotrackDB.class.getName()).log(Level.FINE,
               "SQL Statement:\n\t{0}", sqlStmt);
       prepStmt = connect.prepareStatement(sqlStmt);
@@ -1136,8 +1113,11 @@ public class GotrackDB extends GoTrackDatabase {
     return result;
   }
 /**
- Query the database to get the genes for this species ordered by multi functionality 
- */
+   * Query the database to get the genes for this species ordered by multi functionality 
+   * 
+   * @param species
+   * @return 
+   */
   public List<String> getTopMultifuncforSpecies(String species) {
 
     List<String> result = new ArrayList<String>();

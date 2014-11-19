@@ -17,20 +17,12 @@ import java.util.Set;
 */
 public class WebUtils {
 
-    
-    public static ArrayList<GeneGoGoNames> getGOTermsToConsider(String[] goNames, ArrayList<GeneGoGoNames> dataFromDB){
-        ArrayList<GeneGoGoNames> res = new ArrayList<GeneGoGoNames>();
-        for(String name:goNames){
-            for(GeneGoGoNames dat: dataFromDB){
-                if(name.compareTo(dat.getGoName())==0)
-                    res.add(new GeneGoGoNames(dat.getUniprot(), dat.getGoterm(), dat.getGoName(), dat.getOntology()));
-            }
-        }
-        
-        return res;
-    }
-    
-    
+   
+    /**
+     * For each ontology this function gets the unique functions 
+     * @param original
+     * @return 
+     */
     public static ArrayList<FunctionsPerOntology> getUniqueFunctions(ArrayList<GeneGoGoNames> original) {
         ArrayList<FunctionsPerOntology> res = new ArrayList<FunctionsPerOntology>();
         Set uniqueFunctForP = new HashSet(20);
